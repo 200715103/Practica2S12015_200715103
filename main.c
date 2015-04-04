@@ -1,6 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+/***prueba alternativa quicksort***/
+/***void quicksort(int [10, int, int]);***/
+
+
+/*****LISTA DOBLE ENLAZADA*******/
+/*****struct NodeLista********/
+struct NodeLista{
+    int data;
+    struct NodeLista* siguiente;
+    struct NodeLista* anterior;
+
+};
+
+/***Variable Global NodeLista* cabeza***/
+struct NodeLista* cabeza;
+
+/***Crea Nuevo Nodo y retorna pointer a el mismo***/
+struct NodeLista* GetNewNode(int x){
+    /***Creacion de nuevoNodo y aloja el espacio en la memoria***/
+    struct NodeLista* nuevoNodo = (struct NodeLista*)malloc(sizeof(struct NodeLista));
+    nuevoNodo->data = x;
+    nuevoNodo->anterior = NULL;
+    nuevoNodo->siguiente = NULL;
+    return nuevoNodo;
+}
+
+void InsertAtHead(int x)
+{
+    struct NodeLista* nuevoNodo = GetNewNode(x);
+    if(head == NULL){
+        cabeza = nuevoNodo;
+        return;
+    }
+
+    cabeza->anterior = nuevoNodo;
+    nuevoNodo->siguiente = cabeza;
+    cabeza = nuevoNodo;
+}
+
+
+void InsertAtTail(int x){
+    struct NodeLista* temp = cabeza;
+    struct NodeLista* nuevoNodo = GetNewNode(x);
+    if(cabeza == NULL){
+            cabeza = nuevoNodo;
+            return;
+
+
+}
+
+
+
+
+
+
 int variableGlobal = 0;
 void funcion(){
 printf("prueba de funcion sin argumentos\n");
@@ -270,6 +326,7 @@ void preOrder(struct node *root)
     }
 }
 
+/****Funcion inOrder AVL***/
 void inOrder(struct node *root)
 {
     if(root != NULL)
@@ -287,16 +344,40 @@ void inOrder(struct node *root)
 
 
 
-int arreglo [150];
-int auxiliar[150];
+int arreglo [2001];
+int auxiliar[2001];
 
-
+/********************************************************************************/
+/***********************************MAIN*****************************************/
+/********************************************************************************/
 int main()
 {
+
+    int x[20], size, ii;
+
+    printf("Ingrese tamanio de array: ");
+    scanf("%d", &size);
+
+    printf("Ingrese %d elementos: ", size);
+    for(ii=0;ii<size;ii++){
+        scanf("%d", &x[ii]);}
+
+    quicksort(x,0,size-1);
+
+    printf("Elementos ordenados");
+    for (ii=0; ii<size;ii++){
+        printf(" %d", x[ii]);}
+
+
+
+
+
+
+
     int contador = 0;
     int variable = 10;
     int * puntero = &variable;
-    printf("%u\n",puntero);
+    printf("\n\n%u\n",puntero);
     printf("%d\n",*puntero);
     *puntero = 50;
 
@@ -306,9 +387,9 @@ int main()
     /****/
     struct node *root = NULL;
     FILE *file;
-    file = fopen("C:\\Datos.txt","r");
+    file = fopen("C:\\2000numeros.txt","r");
 
-    char singleLine[150];
+    char singleLine[2001];
     if (file == NULL){
         return -1;
 
@@ -319,7 +400,7 @@ int main()
             int i = 0;
 
             //int i = 0;
-            fgets(singleLine,150,file);
+            fgets(singleLine,2001,file);
             arreglo[i] = atoi(singleLine);
             auxiliar[contador] = arreglo[i];
             printf(singleLine);
@@ -330,7 +411,7 @@ int main()
 
             printf("\n*****\n");
             i++;
-
+            if(i==100){system("PAUSE");}
 
         }
         fclose(file);
@@ -453,53 +534,87 @@ int main()
     inOrder(root);
 
     printf("\n\n%d\n%d\n\n%d\n\n%d\n",auxiliar[0],auxiliar[1],auxiliar[24],auxiliar[151]);
+    int prueba1;
+    int prueba2;
+    int resultado;
 
-int array[150], n, c, d, swap;
-int i, num;
-num = 25;
-/* Copying data from array 'a' to array 'b */
-   for ( i = 0; i < num; i++) {
+    prueba1 = auxiliar[0];
+    prueba2 = auxiliar[1];
+
+    resultado = prueba1 + prueba2;
+
+    printf("The result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
+
+    /*int array[501], n, c, d, swap;
+    int i, num;
+    num = 501;
+    c=501;
+    n=501;*/
+    /* Copying data from array 'a' to array 'b */
+   /*for ( i = 0; i < num; i++) {
       array[i] = auxiliar[i];
    }
 
 
-
-
-
-    c=25;
     for (c = 0 ; c < ( n - 1 ); c++)
-  {
+    {
     for (d = 0 ; d < n - c - 1; d++)
     {
       if (array[d] > array[d+1]) /* For decreasing order use < */
-      {
+     /* {
         swap       = array[d];
         array[d]   = array[d+1];
         array[d+1] = swap;
       }
     }
-  }
+    }
 
-  printf("Sorted list in ascending order:\n");
+  printf("Sorted list in ascending bubble sort order:\n");
 
-  for ( c = 0 ; c < n ; c++ )
-     printf("%d\n", array[c]);
+  for ( c = 0 ; c < n ; c++ ){
+     printf("%d\n", array[c]);}*/
 
 
 
     return 0;
 }
 
+void quicksort(int x[10], int first, int last){
+    int pivot, j, temp, i;
 
+    if(first<last){
+        pivot = first;
+        i = first;
+        j = last;
+
+        while(i<j){
+            while(x[i]<=x[pivot]&&i<last)
+                i++;
+            while(x[j]>x[pivot])
+                j--;
+            if(i<j){
+                temp = x[i];
+                x[i] = x[j];
+                x[j] = temp;
+
+            }
+
+        }
+        temp = x[pivot];
+        x[pivot] = x[j];
+        x[j] = temp;
+        quicksort(x, first, j-1);
+        quicksort(x, j+1, last);
+    }
+
+}
+
+/*La funcion quicksort se llama pasando como primer argumento del array a[] y los indices que le delimitan 0 y n-1
+(indice inferior y superior)*/
 
 /************ quicksort(a,0,n-1)***************/
 
-/*
-
-
-
-
-void quicksort(double a[], int primero, int ultimo){
+/*void quicksort(double a[], int primero, int ultimo){
     int i,j,central;
     double pivote;
 
@@ -532,17 +647,4 @@ void quicksort(double a[], int primero, int ultimo){
     if (i < ultimo)
         quicksort(a,i,ultimo);
 
-  }
-*/
-
-
-
-
-
-
-
-
-
-
-
-
+  }*/
