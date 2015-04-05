@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-
+clock_t inicio;
+clock_t finals;
+float total;
 /***prueba alternativa quicksort***/
 /***void quicksort(int [10, int, int]);***/
 
@@ -31,7 +34,7 @@ struct NodeLista* GetNewNode(int x){
 void InsertAtHead(int x)
 {
     struct NodeLista* nuevoNodo = GetNewNode(x);
-    if(head == NULL){
+    if(cabeza == NULL){
         cabeza = nuevoNodo;
         return;
     }
@@ -48,7 +51,37 @@ void InsertAtTail(int x){
     if(cabeza == NULL){
             cabeza = nuevoNodo;
             return;
+    }
+    while(temp->siguiente != NULL) temp = temp->siguiente;
+    temp->siguiente = nuevoNodo;
+    nuevoNodo->anterior = temp;
+}
 
+void Print(){
+    struct NodeLista* temp = cabeza;
+    printf("Adelante: ");
+    while(temp != NULL){
+        printf("%d ", temp -> data);
+        temp = temp->siguiente;
+    }
+    printf("\n");
+
+}
+
+
+void ReversePrint(){
+    struct NodeLista* temp = cabeza;
+    if(temp == NULL) return;
+
+    while(temp->siguiente != NULL){
+            temp = temp->siguiente;
+    }
+    printf("Reverse: ");
+    while(temp != NULL){
+        printf("%d ", temp->data);
+        temp = temp->anterior;
+    }
+    printf("\n");
 
 }
 
@@ -56,6 +89,7 @@ void InsertAtTail(int x){
 
 
 
+/*************************FIN LISTA DOBLE*********************************/
 
 int variableGlobal = 0;
 void funcion(){
@@ -314,8 +348,7 @@ struct node* deleteNode(struct node* root, int key)
 }
 
 
-// A utility function to print preorder traversal of the tree.
-// The function also prints height of every node
+/***Funcion preOrder***/
 void preOrder(struct node *root)
 {
     if(root != NULL)
@@ -352,28 +385,6 @@ int auxiliar[2001];
 /********************************************************************************/
 int main()
 {
-
-    int x[20], size, ii;
-
-    printf("Ingrese tamanio de array: ");
-    scanf("%d", &size);
-
-    printf("Ingrese %d elementos: ", size);
-    for(ii=0;ii<size;ii++){
-        scanf("%d", &x[ii]);}
-
-    quicksort(x,0,size-1);
-
-    printf("Elementos ordenados");
-    for (ii=0; ii<size;ii++){
-        printf(" %d", x[ii]);}
-
-
-
-
-
-
-
     int contador = 0;
     int variable = 10;
     int * puntero = &variable;
@@ -387,20 +398,21 @@ int main()
     /****/
     struct node *root = NULL;
     FILE *file;
-    file = fopen("C:\\2000numeros.txt","r");
+    file = fopen("C:\\500n.txt","r");
 
     char singleLine[2001];
     if (file == NULL){
         return -1;
 
     }
-    else{
+    else{ inicio = clock();
     while (!feof(file))
         {
             int i = 0;
 
             //int i = 0;
             fgets(singleLine,2001,file);
+
             arreglo[i] = atoi(singleLine);
             auxiliar[contador] = arreglo[i];
             printf(singleLine);
@@ -415,6 +427,7 @@ int main()
 
         }
         fclose(file);
+        finals = clock();
 
 
         int a = arreglo[0];
@@ -533,6 +546,8 @@ int main()
     printf("\nInOrden en el arbol AVL \n");
     inOrder(root);
 
+    printf("El tiempo es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
+
     printf("\n\n%d\n%d\n\n%d\n\n%d\n",auxiliar[0],auxiliar[1],auxiliar[24],auxiliar[151]);
     int prueba1;
     int prueba2;
@@ -544,6 +559,41 @@ int main()
     resultado = prueba1 + prueba2;
 
     printf("The result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
+
+	printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+	printf("Ingresando valores del array a la lista\n");
+    int iii;
+	for( iii = 0; iii<560; iii++){
+        InsertAtTail(auxiliar[iii]);
+	}
+	Print();
+
+
+	printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[559]);
+
+
+    printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+
+    /*
+    int x[20], size, ii;
+
+    printf("Ingrese tamanio de array: ");
+    scanf("%d", &size);
+
+    printf("Ingrese %d elementos: ", size);
+    for(ii=0;ii<size;ii++){
+        scanf("%d", &x[ii]);}
+
+    quicksort(x,0,size-1);
+
+    printf("Elementos ordenados");
+    for (ii=0; ii<size;ii++){
+        printf(" %d", x[ii]);} */
+
 
     /*int array[501], n, c, d, swap;
     int i, num;
@@ -579,6 +629,12 @@ int main()
     return 0;
 }
 
+
+/***********************************************************/
+/*******************FIN MAIN********************************/
+/************************************************************/
+
+/*****Metodo Quicksort******/
 void quicksort(int x[10], int first, int last){
     int pivot, j, temp, i;
 
