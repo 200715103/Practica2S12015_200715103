@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <time.h>
 
+/***Variable Global NodeLista* cabeza***/
+struct NodeLista* cabeza;
+/***Variable Global node root AVL***/
+struct node *root = NULL;
 clock_t inicio;
 clock_t finals;
+int arreglo [2001];
+int auxiliar[2001];
 float total;
+int variableGlobal = 0;
 /***prueba alternativa quicksort***/
 /***void quicksort(int [10, int, int]);***/
 
 
-/*****LISTA DOBLE ENLAZADA*******/
+/******************INICIO LISTA DOBLE ENLAZADA*************************/
 /*****struct NodeLista********/
 struct NodeLista{
     int data;
@@ -17,9 +24,6 @@ struct NodeLista{
     struct NodeLista* anterior;
 
 };
-
-/***Variable Global NodeLista* cabeza***/
-struct NodeLista* cabeza;
 
 /***Crea Nuevo Nodo y retorna pointer a el mismo***/
 struct NodeLista* GetNewNode(int x){
@@ -31,8 +35,116 @@ struct NodeLista* GetNewNode(int x){
     return nuevoNodo;
 }
 
-void InsertAtHead(int x)
-{
+void Bubblesort(){
+    struct NodeLista *tmp, *current, *nextone;
+    printf("Bubblesort: ");
+    printf("\n");
+
+
+    int  n, c, d, swap;
+    n=560;
+
+    for (c = 0 ; c < ( n - 1 ); c++)
+    {   current = cabeza;
+        for (d = 0 ; d < n - c - 1; d++)
+        {
+            if (current->data > current->siguiente->data) /* For decreasing order use < */
+                {
+                    nextone = current->siguiente;
+                    current->siguiente = nextone->siguiente;
+                    nextone->siguiente = current;
+
+
+                    //swap                    = temp->data;
+                    //temp->data              = temp->siguiente->data;
+                    //temp->siguiente->data   = swap;
+                    if(current==cabeza)
+                        {
+                            cabeza = nextone;
+                            current = nextone;
+
+                        }
+                    else
+                        {
+                            current = nextone;
+                            tmp->siguiente = nextone;
+
+                        }
+
+                }
+                tmp = current;
+                current = current->siguiente;
+        }
+    }
+
+  printf("Sorted list in ascending bubble sort order:\n");
+
+
+    printf("Adelante: \n");
+    while(tmp != NULL){
+        printf("%d ", tmp -> data);
+        tmp = tmp->siguiente;
+    }
+
+    printf("\n");
+}
+
+void Quicksort(){
+struct NodeLista* temp = cabeza;
+    printf("Quicksort: ");
+    while(temp != NULL){
+        printf("%d ", temp -> data);
+        temp = temp->siguiente;
+    }
+    printf("\n");
+
+ /*
+    int x[20], size, ii;
+
+    printf("Ingrese tamanio de array: ");
+    scanf("%d", &size);
+
+    printf("Ingrese %d elementos: ", size);
+    for(ii=0;ii<size;ii++){
+        scanf("%d", &x[ii]);}
+
+    quicksort(x,0,size-1);
+
+    printf("Elementos ordenados");
+    for (ii=0; ii<size;ii++){
+        printf(" %d", x[ii]);} */
+
+
+/*void quicksort(int x[10], int first, int last){
+    int pivot, j, temp, i;
+
+    if(first<last){
+        pivot = first;
+        i = first;
+        j = last;
+
+        while(i<j){
+            while(x[i]<=x[pivot]&&i<last)
+                i++;
+            while(x[j]>x[pivot])
+                j--;
+            if(i<j){
+                temp = x[i];
+                x[i] = x[j];
+                x[j] = temp;
+            }
+        }
+        temp = x[pivot];
+        x[pivot] = x[j];
+        x[j] = temp;
+        quicksort(x, first, j-1);
+        quicksort(x, j+1, last);
+    }
+}*/
+
+}
+
+void InsertAtHead(int x){
     struct NodeLista* nuevoNodo = GetNewNode(x);
     if(cabeza == NULL){
         cabeza = nuevoNodo;
@@ -43,7 +155,6 @@ void InsertAtHead(int x)
     nuevoNodo->siguiente = cabeza;
     cabeza = nuevoNodo;
 }
-
 
 void InsertAtTail(int x){
     struct NodeLista* temp = cabeza;
@@ -68,7 +179,6 @@ void Print(){
 
 }
 
-
 void ReversePrint(){
     struct NodeLista* temp = cabeza;
     if(temp == NULL) return;
@@ -82,16 +192,10 @@ void ReversePrint(){
         temp = temp->anterior;
     }
     printf("\n");
-
 }
-
-
-
-
-
 /*************************FIN LISTA DOBLE*********************************/
 
-int variableGlobal = 0;
+
 void funcion(){
 printf("prueba de funcion sin argumentos\n");
 //printf("\a\a\a\a");
@@ -101,8 +205,7 @@ variableGlobal ++;
 void tab(){
 printf("\t");}
 
-typedef struct
-{
+typedef struct{
     char *name;
     char *email;
     int age;
@@ -110,37 +213,32 @@ typedef struct
 } client;
 
 
-
-struct node
-{
+/****************************INICIO AVL**************************************/
+struct node{
     int key;
     int height;
     struct node *left;
     struct node *right;
-
 };
 
 // A utility function to get maximum of two integers
 int max(int a, int b);
 
 // A utility function to get height of the tree
-int height(struct node *N)
-{
+int height(struct node *N){
     if (N == NULL)
         return 0;
     return N->height;
 }
 
 // A utility function to get maximum of two integers
-int max(int a, int b)
-{
+int max(int a, int b){
     return (a > b)? a : b;
 }
 
 /* Helper function that allocates a new node with the given key and
     NULL left and right pointers. */
-struct node* newNode(int key)
-{
+struct node* newNode(int key){
     struct node* node = (struct node*)
                         malloc(sizeof(struct node));
     node->key   = key;
@@ -152,8 +250,7 @@ struct node* newNode(int key)
 
 // A utility function to right rotate subtree rooted with y
 // See the diagram given above.
-struct node *rightRotate(struct node *y)
-{
+struct node *rightRotate(struct node *y){
     struct node *x = y->left;
     struct node *T2 = x->right;
 
@@ -171,8 +268,7 @@ struct node *rightRotate(struct node *y)
 
 // A utility function to left rotate subtree rooted with x
 // See the diagram given above.
-struct node *leftRotate(struct node *x)
-{
+struct node *leftRotate(struct node *x){
     struct node *y = x->right;
     struct node *T2 = y->left;
 
@@ -189,15 +285,13 @@ struct node *leftRotate(struct node *x)
 }
 
 // Get Balance factor of node N
-int getBalance(struct node *N)
-{
+int getBalance(struct node *N){
     if (N == NULL)
         return 0;
     return height(N->left) - height(N->right);
 }
 
-struct node* insert(struct node* node, int key)
-{
+struct node* insert(struct node* node, int key){
     /* 1.  Perform the normal BST rotation */
     if (node == NULL)
         return(newNode(key));
@@ -242,12 +336,10 @@ struct node* insert(struct node* node, int key)
     return node;
 }
 
-
 /* Given a non-empty binary search tree, return the node with minimum
    key value found in that tree. Note that the entire tree does not
    need to be searched. */
-struct node * minValueNode(struct node* node)
-{
+struct node * minValueNode(struct node* node){
     struct node* current = node;
 
     /* loop down to find the leftmost leaf */
@@ -258,8 +350,7 @@ struct node * minValueNode(struct node* node)
 }
 
 
-struct node* deleteNode(struct node* root, int key)
-{
+struct node* deleteNode(struct node* root, int key){
     // STEP 1: PERFORM STANDARD BST DELETE
 
     if (root == NULL)
@@ -349,8 +440,7 @@ struct node* deleteNode(struct node* root, int key)
 
 
 /***Funcion preOrder***/
-void preOrder(struct node *root)
-{
+void preOrder(struct node *root){
     if(root != NULL)
     {
         printf("%d ", root->key);
@@ -360,8 +450,7 @@ void preOrder(struct node *root)
 }
 
 /****Funcion inOrder AVL***/
-void inOrder(struct node *root)
-{
+void inOrder(struct node *root){
     if(root != NULL)
     {
 
@@ -371,14 +460,11 @@ void inOrder(struct node *root)
     }
 }
 
+/********************************FIN AVL*****************************************/
 
 
 
 
-
-
-int arreglo [2001];
-int auxiliar[2001];
 
 /********************************************************************************/
 /***********************************MAIN*****************************************/
@@ -396,7 +482,7 @@ int main()
     printf("%d\n",*puntero);
 
     /****/
-    struct node *root = NULL;
+
     FILE *file;
     file = fopen("C:\\500n.txt","r");
 
@@ -578,52 +664,7 @@ int main()
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
 
-    /*
-    int x[20], size, ii;
-
-    printf("Ingrese tamanio de array: ");
-    scanf("%d", &size);
-
-    printf("Ingrese %d elementos: ", size);
-    for(ii=0;ii<size;ii++){
-        scanf("%d", &x[ii]);}
-
-    quicksort(x,0,size-1);
-
-    printf("Elementos ordenados");
-    for (ii=0; ii<size;ii++){
-        printf(" %d", x[ii]);} */
-
-
-    /*int array[501], n, c, d, swap;
-    int i, num;
-    num = 501;
-    c=501;
-    n=501;*/
-    /* Copying data from array 'a' to array 'b */
-   /*for ( i = 0; i < num; i++) {
-      array[i] = auxiliar[i];
-   }
-
-
-    for (c = 0 ; c < ( n - 1 ); c++)
-    {
-    for (d = 0 ; d < n - c - 1; d++)
-    {
-      if (array[d] > array[d+1]) /* For decreasing order use < */
-     /* {
-        swap       = array[d];
-        array[d]   = array[d+1];
-        array[d+1] = swap;
-      }
-    }
-    }
-
-  printf("Sorted list in ascending bubble sort order:\n");
-
-  for ( c = 0 ; c < n ; c++ ){
-     printf("%d\n", array[c]);}*/
-
+    Bubblesort();
 
 
     return 0;
@@ -633,6 +674,7 @@ int main()
 /***********************************************************/
 /*******************FIN MAIN********************************/
 /************************************************************/
+
 
 /*****Metodo Quicksort******/
 void quicksort(int x[10], int first, int last){
@@ -652,9 +694,7 @@ void quicksort(int x[10], int first, int last){
                 temp = x[i];
                 x[i] = x[j];
                 x[j] = temp;
-
             }
-
         }
         temp = x[pivot];
         x[pivot] = x[j];
@@ -662,7 +702,6 @@ void quicksort(int x[10], int first, int last){
         quicksort(x, first, j-1);
         quicksort(x, j+1, last);
     }
-
 }
 
 /*La funcion quicksort se llama pasando como primer argumento del array a[] y los indices que le delimitan 0 y n-1
