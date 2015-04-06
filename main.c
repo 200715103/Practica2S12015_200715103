@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+typedef unsigned long long UINT64;
 /***Variable Global NodeLista* cabeza***/
 struct NodeLista* cabeza;
 /***Variable Global node root AVL***/
@@ -9,215 +9,20 @@ struct node *root = NULL;
 /***Variable Global NodeLista* cola***/
 struct NodeLista* cola;
 
+int parametro;
+
+
 struct NodeLista* roots;
 clock_t inicio;
 clock_t inicioBS;
+clock_t inicioQS;
 clock_t finals;
 clock_t finalsBS;
-int arreglo [2001];
-int auxiliar[2001];
+clock_t finalsQS;
+
+int arreglo [195090];
+int auxiliar[195090];
 float total;
-
-/***prueba alternativa quicksort***/
-/***void quicksort(int [10, int, int]);***/
-
-
-/******************INICIO LISTA DOBLE ENLAZADA*************************/
-struct NodeLista{
-    int data;
-    struct NodeLista* siguiente;
-    struct NodeLista* anterior;
-};
-
-/***Crea Nuevo Nodo y retorna pointer a el mismo***/
-struct NodeLista* GetNewNode(int x){
-    /***Creacion de nuevoNodo y aloja el espacio en la memoria***/
-    struct NodeLista* nuevoNodo = (struct NodeLista*)malloc(sizeof(struct NodeLista));
-    nuevoNodo->data = x;
-    nuevoNodo->anterior = NULL;
-    nuevoNodo->siguiente = NULL;
-    return nuevoNodo;
-}
-
-void Bubblesort(){
-    struct NodeLista *tmp, *current, *nextone;
-    printf("Bubblesort: ");
-    printf("\n");
-    int  n, c, d;
-    n=560;
-
-    for (c = 0 ; c < ( n - 1 ); c++)
-    {   current = cabeza;
-        for (d = 0 ; d < n - c - 1; d++)
-        {
-            if (current->data > current->siguiente->data) /* For decreasing order use < */
-                {
-                    nextone = current->siguiente;
-                    current->siguiente = nextone->siguiente;
-                    nextone->siguiente = current;
-
-                    if(current==cabeza)
-                        {
-                            cabeza = nextone;
-                            current = nextone;
-
-                        }
-                    else
-                        {
-                            current = nextone;
-                            tmp->siguiente = nextone;
-
-                        }
-
-                }
-                tmp = current;
-                current = current->siguiente;
-        }
-    }
-
-  printf("Lista Ordenada con Bubble Sort:\n");
-    while(tmp != NULL){
-        printf("%d ", tmp -> data);
-        tmp = tmp->siguiente;
-    }
-}
-
-
-/***********************************************************/
-void swap(int* a, int* b){
-int t = *a;     *a = *b;    *b = t;
-}
-
-struct NodeLista *lastNode(struct NodeLista* roots){
-    struct NodeLista *aux = roots;
-    while(aux && aux->siguiente!=NULL){
-        aux = aux->siguiente;}
-    return aux;
-}
-
-struct NodeLista* partition(struct NodeLista *l, struct NodeLista *h){
-    int x = h->data;
-
-    struct NodeLista *i = l->anterior;
-    struct NodeLista *j = l;
-    for(*j; j != h; j = j->siguiente)
-        {
-            if(j->data <= x)
-                {
-                    i = (i == NULL)? l : i->siguiente;
-
-                    swap(&(i->data), &(j->data));
-                }
-        }
-        i = (i == NULL)? l : i->siguiente;
-        swap(&(i->data), &(h->data));
-        return i;
-}
-
-void _quickSort(struct NodeLista* l, struct NodeLista* h){
-    if(h != NULL && l != h && l != h->siguiente)
-        {
-            struct NodeLista *p = partition(l, h);
-            _quickSort(l, p->siguiente);
-            _quickSort(p->siguiente, h);
-        }
-}
-
-void quicksort(struct NodeLista *head){
-    struct NodeLista *h = lastNode(head);
-    _quickSort(head, h);
-}
-
-
-/***********************************************************/
-
-
-
-void quicksortArr(int x[560], int first, int last){
-    int pivot, j, temp, i;
-
-    if(first<last){
-        pivot = first;
-        i = first;
-        j = last;
-
-        while(i<j){
-            while(x[i]<=x[pivot]&&i<last)
-                i++;
-            while(x[j]>x[pivot])
-                j--;
-            if(i<j){
-                temp = x[i];
-                x[i] = x[j];
-                x[j] = temp;
-            }
-        }
-        temp = x[pivot];
-        x[pivot] = x[j];
-        x[j] = temp;
-        quicksortArr(x, first, j-1);
-        quicksortArr(x, j+1, last);
-    }
-}
-
-void InsertAtHead(int x){
-    struct NodeLista* nuevoNodo = GetNewNode(x);
-    if(cabeza == NULL){
-        cabeza = nuevoNodo;
-        return;
-    }
-
-    cabeza->anterior = nuevoNodo;
-    nuevoNodo->siguiente = cabeza;
-    cabeza = nuevoNodo;
-}
-
-void InsertAtTail(int x){
-    struct NodeLista* temp = cabeza;
-    struct NodeLista* nuevoNodo = GetNewNode(x);
-    if(cabeza == NULL){
-            cabeza = nuevoNodo;
-            return;
-    }
-    while(temp->siguiente != NULL) temp = temp->siguiente;
-    temp->siguiente = nuevoNodo;
-    nuevoNodo->anterior = temp;
-}
-
-void Print(){
-    struct NodeLista* temp = cabeza;
-    printf("Adelante: ");
-    while(temp != NULL){
-        printf("%d ", temp -> data);
-        temp = temp->siguiente;
-    }
-    printf("\n");
-
-}
-
-void ReversePrint(){
-    struct NodeLista* temp = cabeza;
-    if(temp == NULL) return;
-
-    while(temp->siguiente != NULL){
-            temp = temp->siguiente;
-    }
-    printf("Reverse: ");
-    while(temp != NULL){
-        printf("%d ", temp->data);
-        temp = temp->anterior;
-    }
-    printf("\n");
-}
-/*************************FIN LISTA DOBLE*********************************/
-
-
-
-
-
-
-
-
 
 
 /****************************INICIO AVL**************************************/
@@ -356,96 +161,6 @@ struct node * minValueNode(struct node* node){
     return current;
 }
 
-
-struct node* deleteNode(struct node* root, int key){
-    // STEP 1: PERFORM STANDARD BST DELETE
-
-    if (root == NULL)
-        return root;
-
-    // If the key to be deleted is smaller than the root's key,
-    // then it lies in left subtree
-    if ( key < root->key )
-        root->left = deleteNode(root->left, key);
-
-    // If the key to be deleted is greater than the root's key,
-    // then it lies in right subtree
-    else if( key > root->key )
-        root->right = deleteNode(root->right, key);
-
-    // if key is same as root's key, then This is the node
-    // to be deleted
-    else
-    {
-        // node with only one child or no child
-        if( (root->left == NULL) || (root->right == NULL) )
-        {
-            struct node *temp = root->left ? root->left : root->right;
-
-            // No child case
-            if(temp == NULL)
-            {
-                temp = root;
-                root = NULL;
-            }
-            else // One child case
-             *root = *temp; // Copy the contents of the non-empty child
-
-            free(temp);
-        }
-        else
-        {
-            // node with two children: Get the inorder successor (smallest
-            // in the right subtree)
-            struct node* temp = minValueNode(root->right);
-
-            // Copy the inorder successor's data to this node
-            root->key = temp->key;
-
-            // Delete the inorder successor
-            root->right = deleteNode(root->right, temp->key);
-        }
-    }
-
-    // If the tree had only one node then return
-    if (root == NULL)
-      return root;
-
-    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
-    root->height = max(height(root->left), height(root->right)) + 1;
-
-    // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to check whether
-    //  this node became unbalanced)
-    int balance = getBalance(root);
-
-    // If this node becomes unbalanced, then there are 4 cases
-
-    // Left Left Case
-    if (balance > 1 && getBalance(root->left) >= 0)
-        return rightRotate(root);
-
-    // Left Right Case
-    if (balance > 1 && getBalance(root->left) < 0)
-    {
-        root->left =  leftRotate(root->left);
-        return rightRotate(root);
-    }
-
-    // Right Right Case
-    if (balance < -1 && getBalance(root->right) <= 0)
-        return leftRotate(root);
-
-    // Right Left Case
-    if (balance < -1 && getBalance(root->right) > 0)
-    {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
-    }
-
-    return root;
-}
-
-
 /***Funcion preOrder***/
 void preOrder(struct node *root){
     if(root != NULL)
@@ -470,132 +185,159 @@ void inOrder(struct node *root){
 /********************************FIN AVL*****************************************/
 
 
+/******************INICIO LISTA DOBLE ENLAZADA*************************/
+struct NodeLista{
+    int data;
+    struct NodeLista* siguiente;
+    struct NodeLista* anterior;
+};
 
+/***Crea Nuevo Nodo y retorna pointer a el mismo***/
+struct NodeLista* GetNewNode(int x){
+    /***Creacion de nuevoNodo y aloja el espacio en la memoria***/
+    struct NodeLista* nuevoNodo = (struct NodeLista*)malloc(sizeof(struct NodeLista));
+    nuevoNodo->data = x;
+    nuevoNodo->anterior = NULL;
+    nuevoNodo->siguiente = NULL;
+    return nuevoNodo;
+}
 
-
-/********************************************************************************/
-/***********************************MAIN*****************************************/
-/********************************************************************************/
-int main()
-{
-    int contador = 0;
-
-    FILE *file;
-    file = fopen("C:\\500n.txt","r");
-
-    char singleLine[2001];
-    if (file == NULL){
-        return -1;
-
-    }
-    else{ inicio = clock();
-    while (!feof(file))
+void Bubblesort(){
+    struct NodeLista *tmp, *current, *nextone;
+    printf("Bubblesort: ");
+    printf("\n");
+    int  n, c, d;
+    n=195090;
+    printf("Procesando...");
+    for (c = 0 ; c < ( n - 1 ); c++)
+    {   current = cabeza;
+        for (d = 0 ; d < n - c - 1; d++)
         {
-            int i = 0;
+            if (current->data > current->siguiente->data) /* For decreasing order use < */
+                {
+                    nextone = current->siguiente;
+                    current->siguiente = nextone->siguiente;
+                    nextone->siguiente = current;
 
-            //int i = 0;
-            fgets(singleLine,2001,file);
+                    if(current==cabeza)
+                        {
+                            cabeza = nextone;
+                            current = nextone;
 
-            arreglo[i] = atoi(singleLine);
-            auxiliar[contador] = arreglo[i];
-            printf(singleLine);
-            printf("\n*****\n");
-            printf("valor numerico\n%i",arreglo[i]);
-            root = insert(root, arreglo[i]);
-            contador++;
+                        }
+                    else
+                        {
+                            current = nextone;
+                            tmp->siguiente = nextone;
 
-            printf("\n*****\n");
-            i++;
-            if(i==100){system("PAUSE");}
+                        }
 
+                }
+                tmp = current;
+                current = current->siguiente;
         }
-        fclose(file);
-        finals = clock();
+    }
 
-
-        int a = arreglo[0];
-        int b = arreglo[1];
-        int c = arreglo[2];
-
-        printf("\nvalor numerico en posicion 0\n%i",arreglo[0]);
-        printf("\nvalor numerico en posicion 1\n%i",arreglo[1]);
-        printf("\nvalor numerico en posicion 2\n%i",arreglo[2]);
-
-
-
-
-        printf("\nLa suma de %i y %i es: %i ",a,b,c);
-
-
-
-
-    }//fin else
-
-
-    printf("\nInOrden en el arbol AVL \n");
-    inOrder(root);
-
-    printf("El tiempo ingresando al AVL es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
-
-    int prueba1;
-    int prueba2;
-    int resultado;
-
-    prueba1 = auxiliar[0];
-    prueba2 = auxiliar[1];
-
-    resultado = prueba1 + prueba2;
-
-    printf("\nThe result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
-
-	printf("\n**************************************************\n");
-	printf("\n**************************************************\n");
-	printf("Ingresando valores del array a la lista\n");
-    int iii;
-	for( iii = 0; iii<560; iii++){
-        InsertAtTail(auxiliar[iii]);
-	}
-	Print();
-
-
-	printf("\n**************************************************\n");
-	printf("\n**************************************************\n");
-    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[559]);
-
-
-    printf("\n**************************************************\n");
-	printf("\n**************************************************\n");
-    inicioBS = clock();
-    Bubblesort();
-    finalsBS = clock();
-    printf("El tiempo ingresando Lista BS es: %f ",(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
-    printf("\n**************************************************\n");
-	printf("\n**************************************************\n");
-
-
-    int ii;
-
-    printf("Elemento uno auxiliar[0] = %d\n",auxiliar[0]);
-    quicksortArr(auxiliar,0,560);
-
-    printf("Elementos ordenados Quick Sort");
-    for (ii=1; ii<561;ii++){
-        printf(" %d", auxiliar[ii]);}
-    printf("\nElemento uno auxiliar[560] = %d\n",auxiliar[560]);
-
-    return 0;
+  printf("Lista Ordenada con Bubble Sort:\n");
+    while(tmp != NULL){
+        printf("%d ", tmp -> data);
+        tmp = tmp->siguiente;
+    }
+    printf("Lista Ordenada con Bubble Sort Al Final:\n");
 }
 
 
-/***********************************************************/
-/*******************FIN MAIN********************************/
-/************************************************************/
 
 
-/*****Metodo Quicksort******/
-void quicksorts(int x[10], int first, int last){
+void InsertAtHead(int x){
+    struct NodeLista* nuevoNodo = GetNewNode(x);
+    if(cabeza == NULL){
+        cabeza = nuevoNodo;
+        return;
+    }
+
+    cabeza->anterior = nuevoNodo;
+    nuevoNodo->siguiente = cabeza;
+    cabeza = nuevoNodo;
+}
+
+void InsertAtTail(int x){
+    struct NodeLista* temp = cabeza;
+    struct NodeLista* nuevoNodo = GetNewNode(x);
+    if(cabeza == NULL){
+            cabeza = nuevoNodo;
+            return;
+            }
+    while(temp->siguiente != NULL)temp = temp->siguiente;
+
+    temp->siguiente = nuevoNodo;
+    nuevoNodo->anterior = temp;
+}
+
+void Print(){
+    struct NodeLista* temp = cabeza;
+    printf("Adelante: ");
+    while(temp != NULL){
+        printf("%d ", temp -> data);
+        temp = temp->siguiente;
+    }
+    printf("\n");
+
+}
+
+void ReversePrint(){
+    struct NodeLista* temp = cabeza;
+    if(temp == NULL) return;
+
+    while(temp->siguiente != NULL){
+            temp = temp->siguiente;
+    }
+    printf("Reverse: ");
+    while(temp != NULL){
+        printf("%d ", temp->data);
+        temp = temp->anterior;
+    }
+    printf("\n");
+}
+/*************************FIN LISTA DOBLE*********************************/
+
+
+
+void BS()
+{
+    printf("\nIngresando a BS");
+    printf("\nEsperando...\n");
+
+int  n, c, d, swap;
+
+printf("\nPasando datos...\n");
+
+n = parametro;
+
+for (c = 0 ; c < ( n - 1 ); c++)
+  {
+    for (d = 0 ; d < n - c - 1; d++)
+    {
+      if (auxiliar[d] > auxiliar[d+1]) /* For decreasing order use < */
+      {
+        swap       = auxiliar[d];
+        auxiliar[d]   = auxiliar[d+1];
+        auxiliar[d+1] = swap;
+      }
+    }
+  }
+printf("Sorted list in ascending order:\n");
+
+  for ( c = 0 ; c < n ; c++ ){
+     printf("%d ", auxiliar[c]);}
+  printf("\nBubble Sort final");
+
+}
+
+
+void quicksortArr(int x[parametro], int first, int last){
     int pivot, j, temp, i;
-
+    //inicioQS = clock();
     if(first<last){
         pivot = first;
         i = first;
@@ -615,53 +357,136 @@ void quicksorts(int x[10], int first, int last){
         temp = x[pivot];
         x[pivot] = x[j];
         x[j] = temp;
-        quicksorts(x, first, j-1);
-        quicksorts(x, j+1, last);
+        quicksortArr(x, first, j-1);
+        quicksortArr(x, j+1, last);
     }
+    //finalsQS = clock();
 }
 
-/*La funcion quicksort se llama pasando como primer argumento del array a[] y los indices que le delimitan 0 y n-1
-(indice inferior y superior)*/
 
-/************ quicksort(a,0,n-1)***************/
+void print_quicksortArr(){
+ int ii;
+ int tope = 0;
+ tope = (int)(parametro + 1);
+    printf("Elementos ordenados Quick Sort");
+    for (ii=0; ii<195091;ii++){
+        printf(" %d", auxiliar[ii]);}
+}
 
-/*void quicksort(double a[], int primero, int ultimo){
-    int i,j,central;
-    double pivote;
+/********************************************************************************/
+/***********************************MAIN*****************************************/
+/********************************************************************************/
+int main()
+{
+    int contador = 0;
+    int parametro = 0;
+    FILE *file;
+    file = fopen("C:\\195090.txt","r");
 
-    central = (primero+ultimo)/2;
-    pivote = a[central];
-    i = primero;
-    j = ultimo;
+    char singleLine[1000000];
+    if (file == NULL){
+        return -1;
 
-
-
-    do{
-        while (a[i]<pivote) i++;
-        while (a[j]>pivote) j--;
-
-        if(i<=j)
+    }
+    else{ inicio = clock();
+    while (!feof(file))
         {
-            double tmp;
-            tmp = a[i];
-            a[i] = a[j];
-            a[j] = tmp;
+            int i = 0;
+
+
+            fgets(singleLine,1000000,file);
+
+            arreglo[i] = atoi(singleLine);
+            auxiliar[contador] = arreglo[i];
+            //printf(singleLine);
+            //printf("\n*****\n");
+            //printf("valor numerico\n%i",arreglo[i]);
+            //printf("\n*****\n");
+            root = insert(root, arreglo[i]);
+            contador++;
+            parametro++;
+
+
             i++;
-            j--;
+
+
         }
-    }while(i<=j);
+        fclose(file);
+        finals = clock();
 
-    if (primero < j)
-        quicksort(a, primero, j);
-
-
-    if (i < ultimo)
-        quicksort(a,i,ultimo);
-
-  }*/
+    }//fin else
 
 
+    //printf("\nInOrden en el arbol AVL \n");
+    //inOrder(root);
 
+    //printf("El tiempo ingresando al AVL es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
+
+    int prueba1;
+    int prueba2;
+    int resultado;
+
+    prueba1 = auxiliar[0];
+    prueba2 = auxiliar[1];
+
+    resultado = prueba1 + prueba2;
+
+    printf("\nThe result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
+
+	printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+	/*printf("Ingresando valores del array a la lista\n");
+
+    int iii;
+	for( iii = 0; iii<195090; iii++){
+        InsertAtTail(auxiliar[iii]);
+	}
+	//Print();*/
+
+
+	printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[559]);
+
+
+    printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+    //inicioBS = clock();
+    //BS();
+    //Bubblesort();
+    //finalsBS = clock();
+    //printf("El tiempo ingresando Lista BS es: %f ",(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
+    printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+
+
+
+
+    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
+    printf("\nElemento ultimo auxiliar[195090] = %d\n",auxiliar[195089]);
+    inicioQS = clock();
+    quicksortArr(auxiliar,0,parametro);
+    print_quicksortArr();
+    finalsQS = clock();
+
+
+
+
+    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
+    printf("\nElemento ultimo auxiliar[195090] = %d\n",auxiliar[parametro]);
+
+
+    printf("El tiempo ingresando Array QS es: %f ",(float)((finalsQS-inicioQS)/CLOCKS_PER_SEC));
+
+    printf("\nParametro!!! = %d\n",parametro);
+
+    return 0;
+}
+
+
+/***********************************************************/
+/*******************FIN MAIN********************************/
+/************************************************************/
 
 
 
