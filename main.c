@@ -6,23 +6,27 @@
 struct NodeLista* cabeza;
 /***Variable Global node root AVL***/
 struct node *root = NULL;
+/***Variable Global NodeLista* cola***/
+struct NodeLista* cola;
+
+struct NodeLista* roots;
 clock_t inicio;
+clock_t inicioBS;
 clock_t finals;
+clock_t finalsBS;
 int arreglo [2001];
 int auxiliar[2001];
 float total;
-int variableGlobal = 0;
+
 /***prueba alternativa quicksort***/
 /***void quicksort(int [10, int, int]);***/
 
 
 /******************INICIO LISTA DOBLE ENLAZADA*************************/
-/*****struct NodeLista********/
 struct NodeLista{
     int data;
     struct NodeLista* siguiente;
     struct NodeLista* anterior;
-
 };
 
 /***Crea Nuevo Nodo y retorna pointer a el mismo***/
@@ -39,9 +43,7 @@ void Bubblesort(){
     struct NodeLista *tmp, *current, *nextone;
     printf("Bubblesort: ");
     printf("\n");
-
-
-    int  n, c, d, swap;
+    int  n, c, d;
     n=560;
 
     for (c = 0 ; c < ( n - 1 ); c++)
@@ -54,10 +56,6 @@ void Bubblesort(){
                     current->siguiente = nextone->siguiente;
                     nextone->siguiente = current;
 
-
-                    //swap                    = temp->data;
-                    //temp->data              = temp->siguiente->data;
-                    //temp->siguiente->data   = swap;
                     if(current==cabeza)
                         {
                             cabeza = nextone;
@@ -77,45 +75,65 @@ void Bubblesort(){
         }
     }
 
-  printf("Sorted list in ascending bubble sort order:\n");
-
-
-    printf("Adelante: \n");
+  printf("Lista Ordenada con Bubble Sort:\n");
     while(tmp != NULL){
         printf("%d ", tmp -> data);
         tmp = tmp->siguiente;
     }
-
-    printf("\n");
 }
 
-void Quicksort(){
-struct NodeLista* temp = cabeza;
-    printf("Quicksort: ");
-    while(temp != NULL){
-        printf("%d ", temp -> data);
-        temp = temp->siguiente;
-    }
-    printf("\n");
 
- /*
-    int x[20], size, ii;
+/***********************************************************/
+void swap(int* a, int* b){
+int t = *a;     *a = *b;    *b = t;
+}
 
-    printf("Ingrese tamanio de array: ");
-    scanf("%d", &size);
+struct NodeLista *lastNode(struct NodeLista* roots){
+    struct NodeLista *aux = roots;
+    while(aux && aux->siguiente!=NULL){
+        aux = aux->siguiente;}
+    return aux;
+}
 
-    printf("Ingrese %d elementos: ", size);
-    for(ii=0;ii<size;ii++){
-        scanf("%d", &x[ii]);}
+struct NodeLista* partition(struct NodeLista *l, struct NodeLista *h){
+    int x = h->data;
 
-    quicksort(x,0,size-1);
+    struct NodeLista *i = l->anterior;
+    struct NodeLista *j = l;
+    for(*j; j != h; j = j->siguiente)
+        {
+            if(j->data <= x)
+                {
+                    i = (i == NULL)? l : i->siguiente;
 
-    printf("Elementos ordenados");
-    for (ii=0; ii<size;ii++){
-        printf(" %d", x[ii]);} */
+                    swap(&(i->data), &(j->data));
+                }
+        }
+        i = (i == NULL)? l : i->siguiente;
+        swap(&(i->data), &(h->data));
+        return i;
+}
+
+void _quickSort(struct NodeLista* l, struct NodeLista* h){
+    if(h != NULL && l != h && l != h->siguiente)
+        {
+            struct NodeLista *p = partition(l, h);
+            _quickSort(l, p->siguiente);
+            _quickSort(p->siguiente, h);
+        }
+}
+
+void quicksort(struct NodeLista *head){
+    struct NodeLista *h = lastNode(head);
+    _quickSort(head, h);
+}
 
 
-/*void quicksort(int x[10], int first, int last){
+/***********************************************************/
+
+
+
+void quicksortArr(int x[560], int first, int last){
     int pivot, j, temp, i;
 
     if(first<last){
@@ -137,11 +155,9 @@ struct NodeLista* temp = cabeza;
         temp = x[pivot];
         x[pivot] = x[j];
         x[j] = temp;
-        quicksort(x, first, j-1);
-        quicksort(x, j+1, last);
+        quicksortArr(x, first, j-1);
+        quicksortArr(x, j+1, last);
     }
-}*/
-
 }
 
 void InsertAtHead(int x){
@@ -196,21 +212,12 @@ void ReversePrint(){
 /*************************FIN LISTA DOBLE*********************************/
 
 
-void funcion(){
-printf("prueba de funcion sin argumentos\n");
-//printf("\a\a\a\a");
-variableGlobal ++;
-}
 
-void tab(){
-printf("\t");}
 
-typedef struct{
-    char *name;
-    char *email;
-    int age;
 
-} client;
+
+
+
 
 
 /****************************INICIO AVL**************************************/
@@ -472,16 +479,6 @@ void inOrder(struct node *root){
 int main()
 {
     int contador = 0;
-    int variable = 10;
-    int * puntero = &variable;
-    printf("\n\n%u\n",puntero);
-    printf("%d\n",*puntero);
-    *puntero = 50;
-
-    printf("%u\n",puntero);
-    printf("%d\n",*puntero);
-
-    /****/
 
     FILE *file;
     file = fopen("C:\\500n.txt","r");
@@ -523,118 +520,23 @@ int main()
         printf("\nvalor numerico en posicion 0\n%i",arreglo[0]);
         printf("\nvalor numerico en posicion 1\n%i",arreglo[1]);
         printf("\nvalor numerico en posicion 2\n%i",arreglo[2]);
-        //int d = arreglo[0];
-        //int e = arreglo[1];
-        //int f = d+e;
 
 
-        //printf("\n**********\n%i\n%i\n**********",singleLine[4],singleLine[0]);
-        //printf(singleLine[1]);
-        //printf(singleLine[2]);
-        //printf(singleLine[3]);
+
+
         printf("\nLa suma de %i y %i es: %i ",a,b,c);
-        //printf("\nLa suma de %i y %i es: %i ",d,e,f);
-
-
-
-}
-/*
-    int arreglo [10];
-    arreglo[0] = 1;
-
-    int peaje;
-    int tipo_vehiculo;
-    printf("\nIntroduzca tipo de vehiculo: ");
-    scanf("%d",&tipo_vehiculo);
-
-    switch(tipo_vehiculo)
-    {
-    case 1:
-        printf("Turismo\n");
-        peaje = 500;
-        printf("%d",peaje);
-        break;
-
-    case 2:
-        printf("Autobus\n");
-        peaje = 3000;
-        printf("%i",peaje);
-
-        break;
-
-    case 3:
-        printf("Motocicleta\n");
-        peaje = 300;
-        printf("%i",peaje);
-        break;
-
-    default:
-        printf("Vehiculo no autorizado\n");
-
-
-    }
-    printf("\n*********************************\n");
-
-    int contador = 0;
-    while(contador<10)
-        {
-        printf("Hola mundo ciclo %d\n",contador);
-        contador ++;
-        }
-
-    int i = 567;
-    int *iPointer = &i;
-    int **ipp = &iPointer;
-    printf("%i\n", **ipp);
-
-    client c1;
-    c1.name = "John Doe";
-    c1.email = "Jd@gmail.com";
-    c1.age = 26;
-    printf("%s\n",c1.name);
-
-    variableGlobal +1;
-    tab();
-    funcion();
-    printf("Hello world!\n");
-    //printf(variableGlobal);*/
 
 
 
 
-/*
-    struct node *root = NULL;*/
+    }//fin else
 
-  /* Constructing tree given in the above figure */
-  /*root = insert(root, 10);
-  root = insert(root, 20);
-  root = insert(root, 30);
-  root = insert(root, 40);
-  root = insert(root, 50);
-  root = insert(root, 25);
-*/
-  /* The constructed AVL Tree would be
-            30
-           /  \
-         20   40
-        /  \     \
-       10  25    50
-  */
-/*
-  printf("Pre order traversal of the constructed AVL tree is \n");
-  preOrder(root);
-
-*/
-
-    printf("\nPreorden en el arbol AVL \n");
-    preOrder(root);
 
     printf("\nInOrden en el arbol AVL \n");
     inOrder(root);
 
-    printf("El tiempo es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
+    printf("El tiempo ingresando al AVL es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
 
-    printf("\n\n%d\n%d\n\n%d\n\n%d\n",auxiliar[0],auxiliar[1],auxiliar[24],auxiliar[151]);
     int prueba1;
     int prueba2;
     int resultado;
@@ -644,7 +546,7 @@ int main()
 
     resultado = prueba1 + prueba2;
 
-    printf("The result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
+    printf("\nThe result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
 
 	printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
@@ -663,9 +565,23 @@ int main()
 
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
-
+    inicioBS = clock();
     Bubblesort();
+    finalsBS = clock();
+    printf("El tiempo ingresando Lista BS es: %f ",(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
+    printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
 
+
+    int ii;
+
+    printf("Elemento uno auxiliar[0] = %d\n",auxiliar[0]);
+    quicksortArr(auxiliar,0,560);
+
+    printf("Elementos ordenados Quick Sort");
+    for (ii=1; ii<561;ii++){
+        printf(" %d", auxiliar[ii]);}
+    printf("\nElemento uno auxiliar[560] = %d\n",auxiliar[560]);
 
     return 0;
 }
@@ -677,7 +593,7 @@ int main()
 
 
 /*****Metodo Quicksort******/
-void quicksort(int x[10], int first, int last){
+void quicksorts(int x[10], int first, int last){
     int pivot, j, temp, i;
 
     if(first<last){
@@ -699,8 +615,8 @@ void quicksort(int x[10], int first, int last){
         temp = x[pivot];
         x[pivot] = x[j];
         x[j] = temp;
-        quicksort(x, first, j-1);
-        quicksort(x, j+1, last);
+        quicksorts(x, first, j-1);
+        quicksorts(x, j+1, last);
     }
 }
 
@@ -743,3 +659,9 @@ void quicksort(int x[10], int first, int last){
         quicksort(a,i,ultimo);
 
   }*/
+
+
+
+
+
+
