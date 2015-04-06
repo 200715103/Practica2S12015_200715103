@@ -10,6 +10,7 @@ struct node *root = NULL;
 struct NodeLista* cola;
 
 int parametro;
+int auxParam;
 
 
 struct NodeLista* roots;
@@ -20,8 +21,9 @@ clock_t finals;
 clock_t finalsBS;
 clock_t finalsQS;
 
-int arreglo [195090];
-int auxiliar[195090];
+int arreglo [815660];
+int auxiliar[815660];
+int auxiliar2[815660];
 float total;
 
 
@@ -308,7 +310,7 @@ void BS()
     printf("\nIngresando a BS");
     printf("\nEsperando...\n");
 
-int  n, c, d, swap;
+int  n, c, d, e, swap;
 
 printf("\nPasando datos...\n");
 
@@ -328,9 +330,9 @@ for (c = 0 ; c < ( n - 1 ); c++)
   }
 printf("Sorted list in ascending order:\n");
 
-  for ( c = 0 ; c < n ; c++ ){
-     printf("%d ", auxiliar[c]);}
-  printf("\nBubble Sort final");
+  for ( e = 0 ; e < n ; e++ ){
+     printf("%d, ", auxiliar[e]);}
+printf("\nBubble Sort final");
 
 }
 
@@ -366,10 +368,8 @@ void quicksortArr(int x[parametro], int first, int last){
 
 void print_quicksortArr(){
  int ii;
- int tope = 0;
- tope = (int)(parametro + 1);
     printf("Elementos ordenados Quick Sort");
-    for (ii=0; ii<195091;ii++){
+    for (ii=0; ii<auxParam;ii++){
         printf(" %d", auxiliar[ii]);}
 }
 
@@ -381,7 +381,7 @@ int main()
     int contador = 0;
     int parametro = 0;
     FILE *file;
-    file = fopen("C:\\195090.txt","r");
+    file = fopen("C:\\815660.txt","r");
 
     char singleLine[1000000];
     if (file == NULL){
@@ -413,12 +413,14 @@ int main()
         }
         fclose(file);
         finals = clock();
-
+    auxParam = parametro;
+    auxParam++;
     }//fin else
 
 
     //printf("\nInOrden en el arbol AVL \n");
     //inOrder(root);
+    //printf("\nLo lograste leiste el arbol AVL \n");
 
     //printf("El tiempo ingresando al AVL es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
 
@@ -442,11 +444,16 @@ int main()
         InsertAtTail(auxiliar[iii]);
 	}
 	//Print();*/
+    int iiii;
+	for (iiii=0; iiii<parametro;iiii++){
+        auxiliar2[iiii] = auxiliar[iiii];
+
+	}
 
 
 	printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
-    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[559]);
+    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[auxParam]);
 
 
     printf("\n**************************************************\n");
@@ -455,15 +462,15 @@ int main()
     //BS();
     //Bubblesort();
     //finalsBS = clock();
-    //printf("El tiempo ingresando Lista BS es: %f ",(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
+    //printf("El tiempo ingresando Lista BS es: %f ",total[3]=(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
 
 
 
 
-    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
-    printf("\nElemento ultimo auxiliar[195090] = %d\n",auxiliar[195089]);
+    //printf("\nElemento primero auxiliar[0] = %i\n",auxiliar[0]);
+    //printf("\nElemento ultimo auxiliar[parametro] = %i\n",auxiliar[auxParam]);
     inicioQS = clock();
     quicksortArr(auxiliar,0,parametro);
     print_quicksortArr();
@@ -473,12 +480,17 @@ int main()
 
 
     printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
-    printf("\nElemento ultimo auxiliar[195090] = %d\n",auxiliar[parametro]);
+    printf("\nElemento ultimo auxiliar[parametro] = %d\n",auxiliar[parametro]);
 
 
-    printf("El tiempo ingresando Array QS es: %f ",(float)((finalsQS-inicioQS)/CLOCKS_PER_SEC));
+    printf("El tiempo ingresando Array QS es: %f ",total=(float)((finalsQS-inicioQS)/CLOCKS_PER_SEC));
 
     printf("\nParametro!!! = %d\n",parametro);
+    printf("\nauxParam!!! = %d\n",auxParam);
+    /*int algo;
+    for (algo=0; algo<4; algo++){
+    printf("\ntotal en posicion  QS!!! = %d\n",total[algo]);}*/
+    printf("\ntotal en posicion  QS!!! = %d\n",total);
 
     return 0;
 }
