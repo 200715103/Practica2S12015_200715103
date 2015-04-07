@@ -11,6 +11,11 @@ struct NodeLista* cola;
 
 int parametro;
 int auxParam;
+int datos = 1;
+int datos2 = 1;
+int datos3 = 1;
+int datos4 = 1;
+
 
 
 struct NodeLista* roots;
@@ -23,9 +28,12 @@ clock_t finalsAVL;
 clock_t finalsBS;
 clock_t finalsQS;
 
-int arreglo [560];
-int auxiliar[560];
-int auxiliar2[560];
+//int* arreglo;
+//int* auxiliar;
+int auxiliar[195090];
+int arreglo[195090];
+
+int auxiliar2[195090];
 float total;
 
 
@@ -108,6 +116,7 @@ int getBalance(struct node *N){
 }
 
 struct node* insert(struct node* node, int key){
+
     /* 1.  Perform the normal BST rotation */
     if (node == NULL)
         return(newNode(key));
@@ -150,6 +159,7 @@ struct node* insert(struct node* node, int key){
 
     /* return the (unchanged) node pointer */
     return node;
+
 }
 
 /* Given a non-empty binary search tree, return the node with minimum
@@ -176,134 +186,26 @@ void preOrder(struct node *root){
 }
 
 /****Funcion inOrder AVL***/
-void inOrder(struct node *root){
+void inOrder(struct node *root,FILE *ingreso, clock_t inicioAVL){
+
     if(root != NULL)
     {
 
-        inOrder(root->left);
+        inOrder(root->left,ingreso,inicioAVL);
         printf("%d ", root->key);
-        inOrder(root->right);
+        inOrder(root->right,ingreso,inicioAVL);
+        clock_t aux_f = clock();
+        //fprintf(ingreso, "hola %i", datos);
+        fprintf(ingreso,"%f %i \n",((aux_f-inicioAVL)/(float)CLOCKS_PER_SEC),datos);
+        datos++;
     }
+
 }
 
 /********************************FIN AVL*****************************************/
 
 
-/******************INICIO LISTA DOBLE ENLAZADA*************************/
-struct NodeLista{
-    int data;
-    struct NodeLista* siguiente;
-    struct NodeLista* anterior;
-};
 
-/***Crea Nuevo Nodo y retorna pointer a el mismo***/
-struct NodeLista* GetNewNode(int x){
-    /***Creacion de nuevoNodo y aloja el espacio en la memoria***/
-    struct NodeLista* nuevoNodo = (struct NodeLista*)malloc(sizeof(struct NodeLista));
-    nuevoNodo->data = x;
-    nuevoNodo->anterior = NULL;
-    nuevoNodo->siguiente = NULL;
-    return nuevoNodo;
-}
-
-void Bubblesort(){
-    struct NodeLista *tmp, *current, *nextone;
-    printf("Bubblesort: ");
-    printf("\n");
-    int  n, c, d;
-    n=195090;
-    printf("Procesando...");
-    for (c = 0 ; c < ( n - 1 ); c++)
-    {   current = cabeza;
-        for (d = 0 ; d < n - c - 1; d++)
-        {
-            if (current->data > current->siguiente->data) /* For decreasing order use < */
-                {
-                    nextone = current->siguiente;
-                    current->siguiente = nextone->siguiente;
-                    nextone->siguiente = current;
-
-                    if(current==cabeza)
-                        {
-                            cabeza = nextone;
-                            current = nextone;
-
-                        }
-                    else
-                        {
-                            current = nextone;
-                            tmp->siguiente = nextone;
-
-                        }
-
-                }
-                tmp = current;
-                current = current->siguiente;
-        }
-    }
-
-  printf("Lista Ordenada con Bubble Sort:\n");
-    while(tmp != NULL){
-        printf("%d ", tmp -> data);
-        tmp = tmp->siguiente;
-    }
-    printf("Lista Ordenada con Bubble Sort Al Final:\n");
-}
-
-
-
-
-void InsertAtHead(int x){
-    struct NodeLista* nuevoNodo = GetNewNode(x);
-    if(cabeza == NULL){
-        cabeza = nuevoNodo;
-        return;
-    }
-
-    cabeza->anterior = nuevoNodo;
-    nuevoNodo->siguiente = cabeza;
-    cabeza = nuevoNodo;
-}
-
-void InsertAtTail(int x){
-    struct NodeLista* temp = cabeza;
-    struct NodeLista* nuevoNodo = GetNewNode(x);
-    if(cabeza == NULL){
-            cabeza = nuevoNodo;
-            return;
-            }
-    while(temp->siguiente != NULL)temp = temp->siguiente;
-
-    temp->siguiente = nuevoNodo;
-    nuevoNodo->anterior = temp;
-}
-
-void Print(){
-    struct NodeLista* temp = cabeza;
-    printf("Adelante: ");
-    while(temp != NULL){
-        printf("%d ", temp -> data);
-        temp = temp->siguiente;
-    }
-    printf("\n");
-
-}
-
-void ReversePrint(){
-    struct NodeLista* temp = cabeza;
-    if(temp == NULL) return;
-
-    while(temp->siguiente != NULL){
-            temp = temp->siguiente;
-    }
-    printf("Reverse: ");
-    while(temp != NULL){
-        printf("%d ", temp->data);
-        temp = temp->anterior;
-    }
-    printf("\n");
-}
-/*************************FIN LISTA DOBLE*********************************/
 
 
 /************************INICIO METODOS********************************/
@@ -345,12 +247,7 @@ int ii;
         printf("%d ", auxiliar[ii]);}
  printf("\nElementos ordenados Bubble Sort");
 }
-/*void print_quicksortArr(){
- int ii;
-   for (ii=0; ii<auxParam;ii++){
-        printf(" %d", auxiliar[ii]);}
-    printf("Elementos ordenados Quick Sort");
-}*/
+
 
 void quicksortArr(int x[parametro], int first, int last){
     int pivot, j, temp, i;
@@ -383,7 +280,7 @@ void quicksortArr(int x[parametro], int first, int last){
 
 void print_quicksortArr(){
  int ii;
-   for (ii=0; ii<auxParam;ii++){
+   for (ii=0; ii<auxParam-1;ii++){
         printf(" %d", auxiliar[ii]);}
     printf("\nElementos ordenados Quick Sort");
 }
@@ -395,87 +292,89 @@ void print_quicksortArr(){
 int main()
 {
     int contador = 0;
+
+    int tiempo = 0;
+    clock_t aux_f;
 //815660
+//195090
+//2000numeros
+
     FILE *file;
-    file = fopen("C:\\500n.txt","r");
+    file = fopen("C:\\195090.txt","r");
+
+    FILE *INS;
+    INS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\Insert.dat","w");
+
+    FILE *ingreso;
+    ingreso = fopen("C:\\Users\\julio\\Desktop\\Graficas\\inOrdenAVL.dat","w");
+
+    FILE *BSS;
+    BSS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\BSS.dat","w");
+
+    FILE *QSS;
+    QSS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\BSS.dat","w");
 
     char singleLine[1000000];
     if (file == NULL){
+        printf("Archivo no encontrado\n");
         return -1;
 
     }
-    else{ inicio = clock();
+    else{
+
+    inicio = clock();
     while (!feof(file))
         {
+
             int i = 0;
 
-
             fgets(singleLine,1000000,file);
+            //printf(singleLine);
 
             arreglo[i] = atoi(singleLine);
             auxiliar[contador] = arreglo[i];
-            //printf(singleLine);
-            //printf("\n*****\n");
-            //printf("valor numerico\n%i",arreglo[i]);
-            //printf("\n*****\n");
+
             root = insert(root, arreglo[i]);
+            aux_f = clock();
+            fprintf(INS,"%f %i \n",((aux_f-inicio)/(float)CLOCKS_PER_SEC),datos2);
             contador++;
             parametro++;
-
-
             i++;
-
+            datos2++;
 
         }
-        fclose(file);
-        finals = clock();
+        fclose(INS);
+    finals = clock();
+    fclose(file);
+
     auxParam = parametro;
-    auxParam++;
+
+
+
     }//fin else
-
-    /************InOrden AVL***************/
-        //inicioAVL = clock();
-        //inOrder(root);
-        //finalsAVL = clock();
-    /************InOrden AVL***************/
-
-
-
-
-    int prueba1;
-    int prueba2;
-    int resultado;
-
-    prueba1 = auxiliar[0];
-    prueba2 = auxiliar[1];
-
-    resultado = prueba1 + prueba2;
-
-    printf("\nThe result of the operation adding First number %d and Second number %d from the array is Result: %d\n", prueba1, prueba2, resultado);
-
-	printf("\n**************************************************\n");
-	printf("\n**************************************************\n");
-	/*printf("Ingresando valores del array a la lista\n");
-
-    int iii;
-	for( iii = 0; iii<195090; iii++){
-        InsertAtTail(auxiliar[iii]);
-	}
-	//Print();*/
-    /*int iiii;
-	for (iiii=0; iiii<parametro;iiii++){
+    int iiii;
+    for (iiii=0; iiii<parametro;iiii++){
         auxiliar2[iiii] = auxiliar[iiii];
 
-	}*/
-    //Bubblesort();
+	}
+
+
+    /************InOrden AVL***************/
+    inicioAVL = clock();
+    if(ingreso!=NULL){
+    inOrder(root, ingreso, inicioAVL);
+    }
+    else{
+            printf("error");}
+    finalsAVL = clock();
+    fclose(ingreso);
+    /************InOrden AVL***************/
 
 
 
-
-    printf("\nPARAMETRO PARAMETRO %i\n",parametro);
 
 	/************Ordenar BS***************/
-    inicioBS = clock();
+    /*inicioBS = clock();
     BS();
     print_BS();
     finalsBS = clock();
@@ -486,28 +385,31 @@ int main()
 
 
     /************Ordenar QS***************/
-    //inicioQS = clock();
-    //quicksortArr(auxiliar,0,parametro);
-    //print_quicksortArr();
-    //finalsQS = clock();
+    /*inicioQS = clock();
+    quicksortArr(auxiliar2,0,parametro);
+    print_quicksortArr();
+    finalsQS = clock();
     /************Ordenar QS***************/
 
 
 
-    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
-    printf("\nElemento ultimo auxiliar[parametro] = %d\n",auxiliar[parametro-1]);
+
 
     printf("\nEl tiempo ingresando datos al AVL es: %f ",(float)((finals-inicio)/CLOCKS_PER_SEC));
     printf("\nEl tiempo recorrido InOrden del AVL es: %f ",(float)((finalsAVL-inicioAVL)/CLOCKS_PER_SEC));
     printf("\nEl tiempo ordenando Array BS es: %f ",(float)((finalsBS-inicioBS)/CLOCKS_PER_SEC));
     printf("\nEl tiempo ordenando Array QS es: %f ",(float)((finalsQS-inicioQS)/CLOCKS_PER_SEC));
 
-    printf("\nParametro!!! = %d\n",parametro);
-    printf("\nauxParam!!! = %d\n",auxParam);
 
+
+    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
+    printf("\nElemento ultimo auxiliar[parametro] = %d\n",auxiliar[parametro-1]);
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
-    printf("valor primero %i , valor ultimo %i ", auxiliar[0], auxiliar[auxParam]);
+    printf("valor primero %d , valor ultimo %d ", auxiliar[0], auxiliar[parametro-1]);
+    printf("\n**************************************************\n");
+	printf("\n**************************************************\n");
+    printf("valor primero %d , valor ultimo %d ", auxiliar2[0], auxiliar2[parametro-1]);
 
 
     return 0;
@@ -518,5 +420,14 @@ int main()
 /*******************FIN MAIN********************************/
 /************************************************************/
 
+/*printf("Ingresando valores del array a la lista\n");
 
+
+	//Print();*/
+    /*int iiii;
+	for (iiii=0; iiii<parametro;iiii++){
+        auxiliar2[iiii] = auxiliar[iiii];
+
+	}*/
+    //Bubblesort();
 
