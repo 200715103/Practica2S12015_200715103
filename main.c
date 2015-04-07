@@ -16,7 +16,7 @@ int datos2 = 1;
 int datos3 = 1;
 int datos4 = 1;
 
-
+int largoArray;
 
 struct NodeLista* roots;
 clock_t inicio;
@@ -30,11 +30,11 @@ clock_t finalsQS;
 
 //int* arreglo;
 //int* auxiliar;
-int auxiliar[195090];
-int arreglo[195090];
+int *auxiliar;
+int *arreglo;
 
-int auxiliar2[195090];
-float total;
+int *auxiliar2;
+
 
 
 /****************************INICIO AVL**************************************/
@@ -209,7 +209,7 @@ void inOrder(struct node *root,FILE *ingreso, clock_t inicioAVL){
 
 
 /************************INICIO METODOS********************************/
-void BS()
+void BS(FILE *BSS)
 {
     printf("\nIngresando a BS");
     printf("\nEsperando...\n");
@@ -219,7 +219,9 @@ int   c, d, e, swap;
 printf("\nPasando datos...\n");
 printf("\nParametro!!!!...%i\n",parametro);
 
-
+clock_t inicio;
+clock_t clkFinal;
+inicio = clock();
 for (c = 0 ; c < ( parametro - 1 ); c++)
   {
     for (d = 0 ; d < parametro - c - 1; d++)
@@ -231,12 +233,11 @@ for (c = 0 ; c < ( parametro - 1 ); c++)
         auxiliar[d+1] = swap;
       }
     }
+    clkFinal = clock();
+    fprintf(BSS,"%f %i \n",((clkFinal-inicio)/(float)CLOCKS_PER_SEC),datos3);
+    datos3++;
   }
-/*printf("Sorted list in ascending order:\n");
 
-  for ( e = 0 ; e < parametro ; e++ ){
-     printf("%d ", auxiliar[e]);}
-printf("\nBubble Sort final");*/
 
 }
 
@@ -249,9 +250,12 @@ int ii;
 }
 
 
-void quicksortArr(int x[parametro], int first, int last){
+void quicksortArr(int *x, int first, int last, FILE *QSS){
     int pivot, j, temp, i;
-    //inicioQS = clock();
+    clock_t inicio;
+    clock_t clkFinal;
+
+    inicio = clock();
     if(first<last){
         pivot = first;
         i = first;
@@ -271,30 +275,50 @@ void quicksortArr(int x[parametro], int first, int last){
         temp = x[pivot];
         x[pivot] = x[j];
         x[j] = temp;
-        quicksortArr(x, first, j-1);
-        quicksortArr(x, j+1, last);
+
+        quicksortArr(x, first, j-1,QSS);
+        clkFinal = clock();
+        fprintf(QSS,"%f %i \n",((clkFinal-inicio)/(float)CLOCKS_PER_SEC),datos4);
+        datos4++;
+
+        quicksortArr(x, j+1, last,QSS);
+        clkFinal = clock();
+        fprintf(QSS,"%f %i \n",((clkFinal-inicio)/(float)CLOCKS_PER_SEC),datos4);
+        datos4++;
+
     }
-    //finalsQS = clock();
+
+
 }
 
 
 void print_quicksortArr(){
  int ii;
-   for (ii=0; ii<auxParam-1;ii++){
-        printf(" %d", auxiliar[ii]);}
+   for (ii=1; ii<parametro+1;ii++){
+        printf(" %d", auxiliar2[ii]);}
     printf("\nElementos ordenados Quick Sort");
 }
 
+void setArray(int x){
+arreglo =(int*)malloc(x*sizeof (int ));
+auxiliar =(int*)malloc(x*sizeof (int ));
+auxiliar2 =(int*)malloc(x*sizeof (int ));
+}
 
 /********************************************************************************/
 /***********************************MAIN*****************************************/
 /********************************************************************************/
 int main()
 {
-    int contador = 0;
 
+    int contador = 0;
     int tiempo = 0;
     clock_t aux_f;
+
+    int valorArray;
+    scanf("%i",&valorArray);
+    setArray(valorArray);
+
 //815660
 //195090
 //2000numeros
@@ -312,7 +336,7 @@ int main()
     BSS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\BSS.dat","w");
 
     FILE *QSS;
-    QSS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\BSS.dat","w");
+    QSS = fopen("C:\\Users\\julio\\Desktop\\Graficas\\QSS.dat","w");
 
     char singleLine[1000000];
     if (file == NULL){
@@ -360,7 +384,7 @@ int main()
 
 
     /************InOrden AVL***************/
-    inicioAVL = clock();
+    /*inicioAVL = clock();
     if(ingreso!=NULL){
     inOrder(root, ingreso, inicioAVL);
     }
@@ -373,11 +397,14 @@ int main()
 
 
 
+
+
 	/************Ordenar BS***************/
     /*inicioBS = clock();
-    BS();
+    BS(BSS);
     print_BS();
     finalsBS = clock();
+    fclose(BSS);
     /************Ordenar BS***************/
 
 
@@ -385,10 +412,11 @@ int main()
 
 
     /************Ordenar QS***************/
-    /*inicioQS = clock();
-    quicksortArr(auxiliar2,0,parametro);
-    print_quicksortArr();
+    inicioQS = clock();
+    quicksortArr(auxiliar2,0,parametro,QSS);
+    print_quicksortArr(QSS);
     finalsQS = clock();
+    fclose(QSS);
     /************Ordenar QS***************/
 
 
@@ -402,14 +430,13 @@ int main()
 
 
 
-    printf("\nElemento primero auxiliar[0] = %d\n",auxiliar[0]);
-    printf("\nElemento ultimo auxiliar[parametro] = %d\n",auxiliar[parametro-1]);
+
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
     printf("valor primero %d , valor ultimo %d ", auxiliar[0], auxiliar[parametro-1]);
     printf("\n**************************************************\n");
 	printf("\n**************************************************\n");
-    printf("valor primero %d , valor ultimo %d ", auxiliar2[0], auxiliar2[parametro-1]);
+    printf("valor primero %d , valor ultimo %d ", auxiliar2[0], auxiliar2[parametro]);
 
 
     return 0;
@@ -420,14 +447,4 @@ int main()
 /*******************FIN MAIN********************************/
 /************************************************************/
 
-/*printf("Ingresando valores del array a la lista\n");
-
-
-	//Print();*/
-    /*int iiii;
-	for (iiii=0; iiii<parametro;iiii++){
-        auxiliar2[iiii] = auxiliar[iiii];
-
-	}*/
-    //Bubblesort();
 
