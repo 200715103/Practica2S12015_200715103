@@ -3,11 +3,11 @@
 #include <time.h>
 typedef unsigned long long UINT64;
 /***Variable Global NodeLista* cabeza***/
-struct NodeLista* cabeza;
+//struct NodeLista* cabeza;
 /***Variable Global node root AVL***/
 struct node *root = NULL;
 /***Variable Global NodeLista* cola***/
-struct NodeLista* cola;
+//struct NodeLista* cola;
 
 int parametro;
 int auxParam;
@@ -16,7 +16,7 @@ int datos2 = 1;
 int datos3 = 1;
 int datos4 = 1;
 
-int largoArray;
+
 
 struct NodeLista* roots;
 clock_t inicio;
@@ -28,16 +28,15 @@ clock_t finalsAVL;
 clock_t finalsBS;
 clock_t finalsQS;
 
-//int* arreglo;
-//int* auxiliar;
+
 int *auxiliar;
 int *arreglo;
-
 int *auxiliar2;
 
 
-
+/********************************************************************************/
 /****************************INICIO AVL**************************************/
+/********************************************************************************/
 struct node{
     int key;
     int height;
@@ -201,14 +200,16 @@ void inOrder(struct node *root,FILE *ingreso, clock_t inicioAVL){
     }
 
 }
-
+/********************************************************************************/
 /********************************FIN AVL*****************************************/
+/********************************************************************************/
 
 
 
 
-
+/********************************************************************************/
 /************************INICIO METODOS********************************/
+/********************************************************************************/
 void BS(FILE *BSS)
 {
     printf("\nIngresando a BS");
@@ -310,6 +311,7 @@ auxiliar2 =(int*)malloc(x*sizeof (int ));
 /********************************************************************************/
 int main()
 {
+    printf("Favor ingresar el numero de elementos del archivo:\n");
 
     int contador = 0;
     int tiempo = 0;
@@ -345,16 +347,13 @@ int main()
 
     }
     else{
-
+/************Insert datos al AVL****************/
     inicio = clock();
     while (!feof(file))
         {
-
             int i = 0;
-
             fgets(singleLine,1000000,file);
-            //printf(singleLine);
-
+            printf(singleLine);
             arreglo[i] = atoi(singleLine);
             auxiliar[contador] = arreglo[i];
 
@@ -365,17 +364,15 @@ int main()
             parametro++;
             i++;
             datos2++;
-
         }
-        fclose(INS);
+    fclose(INS);
     finals = clock();
     fclose(file);
-
     auxParam = parametro;
+ }//fin else
 
 
-
-    }//fin else
+    /*****************Copia de arrays********************/
     int iiii;
     for (iiii=0; iiii<parametro;iiii++){
         auxiliar2[iiii] = auxiliar[iiii];
@@ -384,7 +381,7 @@ int main()
 
 
     /************InOrden AVL***************/
-    /*inicioAVL = clock();
+    inicioAVL = clock();
     if(ingreso!=NULL){
     inOrder(root, ingreso, inicioAVL);
     }
@@ -400,7 +397,7 @@ int main()
 
 
 	/************Ordenar BS***************/
-    /*inicioBS = clock();
+    inicioBS = clock();
     BS(BSS);
     print_BS();
     finalsBS = clock();
